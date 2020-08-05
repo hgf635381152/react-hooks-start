@@ -3,3 +3,30 @@
   awesome-typescript-loader -> tsconfig.json -> typescript .jsx ->
   babel(ployfill+env+plugin 装饰器模式) -> react DOM -> 
   webpack-dev-server html-weboack-plugin footer script bundle.js
+
+2. 最烦的是什么？ react-scripts
+  约定
+
+3. hooks 特色
+  - useState
+    object ...
+
+  - useEffect
+    
+
+  - useCallback
+  - useMemo
+  - useRef
+  - useReducer
+
+4. 分析一下react项目是如何运行
+jsx
+root 根
+JSX 编译的过程
+正则 <(.+)>...</>
+- 节点的类型
+  有哪些DOM类型?   
+    标签节点 div h4
+    组件  递归 
+    <></>
+    文本  退出
