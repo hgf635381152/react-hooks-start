@@ -1,37 +1,179 @@
-import React, { memo, useState } from 'react'
+import React, { useState, useEffect, useRef, useReducer } from 'react'
 
+const userInfoReducer = (state, action) => {
+  switch(action.type) {
+    case "setusername":
+      return {
+        ...state,
+        name: action.payload
+      }
+    case "setlastname":
+      return {
+        ...state,
+        lastname: action.payload
+      }
+    default:
+      return state
+  }
+}
 export const MyComponent = () => {
-  const [userInfo, setUserInfo] = useState({
-    name: ' John ',
+  const [reducer, dispatch] = useReducer(userInfoReducer, {
+    name: 'John',
     lastname: 'Doe'
   })
-
-  setTimeout(() => {
-    setUserInfo({
-      ...userInfo,
-      name: ' John '
-    })
-  }, 2000)
-  
   return (
     <>
-      <DisplayUsername name={userInfo.name} />
+      <h3>{reducer.name} {reducer.lastname}</h3>
+      <Editusername name={reducer.name} dispatch={dispatch}/>
       <input 
-        type="text"
-        value={userInfo.name}
-        onChange={e => setUserInfo({
-          ...userInfo,
-          name: e.target.value
+        type="text" 
+        value={reducer.lastname}
+        onChange={e => dispatch({
+          type: "setlastname",
+          payload: e.target.value
         })}
       />
     </>
   )
 }
 
-export const DisplayUsername = memo(props => {
-  console.log('只在name发生改变时更新')
-  return <h3>{props.name}</h3>
+export const Editusername = React.memo(props => {
+  console.log("Hey when name get updated, check React.memo")
+  return (
+    <input
+      type="text"
+      value={props.name}
+      onChange={e => props.dispatch({
+        type: "setusername",
+        payload: e.target.value
+      })}
+    />
+  )
 })
+
+
+
+
+
+// export const MyComponent = () => {
+//   const [visible, setVisible] = useState(false)
+//   // mount unmount
+//   return (
+//     <>
+//       {visible && <MyChildComponent/>}
+//       <button onClick={() => setVisible(!visible)}>
+//         Toggle Child component visibility
+//       </button>
+//     </>
+//   )
+// }
+
+// export const MyChildComponent = () => {
+//   const [filter, setFilter] = useState('')
+//   const [userCollection, setUserCollection] = useState([])
+//   const mountedRef = useRef(false)
+
+//   useEffect(() => {
+//     mountedRef.current = true
+//     return () => {
+//       mountedRef.current = false
+//     }
+//   })
+
+//   const setSafeUserCollection = (userCollection) => {
+//     mountedRef.current && setUserCollection(userCollection)
+//   }
+//   useEffect(() => {
+//     setTimeout(() => {
+//       fetch(`https://jsonplaceholder.typicode.com/users?name_like=${filter}`)
+//       .then(response => response.json())
+//       // 不能做
+//       .then(json => setSafeUserCollection(json))
+//     }, 2500)
+//   }, [filter])
+
+//   return (
+//     <div>
+//       <input 
+//         type="text" 
+//         value={filter}
+//         onChange={e => setFilter(e.target.value)}
+//       />
+//       <ul>
+//         {
+//           userCollection.map((user, index) => (
+//           <li key={index}>{user.name}</li>
+//           ))
+//         }
+//       </ul>
+//     </div>
+//   )
+// }
+
+
+
+
+// export const MyComponent = () => {
+//   const [message ,setMessage] = useState('initial message')   
+//   const [seconds, setSeconds] = useState(0)
+//   const secondsRef = React.useRef(seconds);   // useRef  冲破函数式编程带来的闭包的副作用
+
+//   useEffect(() => {
+//     setTimeout(() => {
+//       console.log(seconds)
+//       setSeconds(1)
+//       secondsRef.current = 1
+//     },1000)
+
+//     setTimeout(() => {
+//       setMessage(`Total seconds: ${secondsRef.current}`)
+//     }, 2000)
+//   }, [])
+  
+//   return (
+//     <>
+//       <h3>{message}</h3>
+//       <h4>{seconds}</h4>
+//     </>
+//   )
+// }
+
+
+
+
+
+// export const MyComponent = () => {
+//   const [userInfo, setUserInfo] = useState({
+//     name: ' John ',
+//     lastname: 'Doe'
+//   })
+
+//   setTimeout(() => {
+//     setUserInfo({
+//       ...userInfo,
+//       name: ' John '
+//     })
+//   }, 2000)
+  
+//   return (
+//     <>
+//       <DisplayUsername name={userInfo.name} />
+//       <input 
+//         type="text"
+//         value={userInfo.name}
+//         onChange={e => setUserInfo({
+//           ...userInfo,
+//           name: e.target.value
+//         })}
+//       />
+//     </>
+//   )
+// }
+
+// export const DisplayUsername = memo(props => {
+//   console.log('只在name发生改变时更新')
+//   return <h3>{props.name}</h3>
+// })
 
 
 
