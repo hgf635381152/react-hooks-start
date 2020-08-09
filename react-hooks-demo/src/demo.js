@@ -1,55 +1,87 @@
-import React, { useState, useEffect, useRef, useReducer } from 'react'
+import React, { useState, useEffect } from "react";
 
-const userInfoReducer = (state, action) => {
-  switch(action.type) {
-    case "setusername":
-      return {
-        ...state,
-        name: action.payload
-      }
-    case "setlastname":
-      return {
-        ...state,
-        lastname: action.payload
-      }
-    default:
-      return state
-  }
-}
 export const MyComponent = () => {
-  const [reducer, dispatch] = useReducer(userInfoReducer, {
-    name: 'John',
-    lastname: 'Doe'
-  })
-  return (
-    <>
-      <h3>{reducer.name} {reducer.lastname}</h3>
-      <Editusername name={reducer.name} dispatch={dispatch}/>
-      <input 
-        type="text" 
-        value={reducer.lastname}
-        onChange={e => dispatch({
-          type: "setlastname",
-          payload: e.target.value
-        })}
-      />
-    </>
-  )
-}
+  const [filter, setFilter] = useState("");
+  const [List, setList] = useState([])
 
-export const Editusername = React.memo(props => {
-  console.log("Hey when name get updated, check React.memo")
+  useEffect(() => {
+    fetch(`https://jsonplaceholder.typicode.com/users?name_like=${filter}`)
+    .then(response => response.json())
+    .then(json => setList(json))
+  }, [filter])
+
   return (
-    <input
-      type="text"
-      value={props.name}
-      onChange={e => props.dispatch({
-        type: "setusername",
-        payload: e.target.value
-      })}
-    />
-  )
-})
+    <div>
+      <input value={filter} onChange={e => setFilter(e.target.value)} />
+      <ul>
+        {
+          List.map((user, index) => (
+            <li key={index}>{user.name}</li>
+          ))
+        }
+      </ul>
+    </div>
+  );
+};
+
+
+
+
+
+
+
+// import React, { useState, useEffect, useRef, useReducer } from 'react'
+
+// const userInfoReducer = (state, action) => {
+//   switch(action.type) {
+//     case "setusername":
+//       return {
+//         ...state,
+//         name: action.payload
+//       }
+//     case "setlastname":
+//       return {
+//         ...state,
+//         lastname: action.payload
+//       }
+//     default:
+//       return state
+//   }
+// }
+// export const MyComponent = () => {
+//   const [reducer, dispatch] = useReducer(userInfoReducer, {
+//     name: 'John',
+//     lastname: 'Doe'
+//   })
+//   return (
+//     <>
+//       <h3>{reducer.name} {reducer.lastname}</h3>
+//       <Editusername name={reducer.name} dispatch={dispatch}/>
+//       <input 
+//         type="text" 
+//         value={reducer.lastname}
+//         onChange={e => dispatch({
+//           type: "setlastname",
+//           payload: e.target.value
+//         })}
+//       />
+//     </>
+//   )
+// }
+
+// export const Editusername = React.memo(props => {
+//   console.log("Hey when name get updated, check React.memo")
+//   return (
+//     <input
+//       type="text"
+//       value={props.name}
+//       onChange={e => props.dispatch({
+//         type: "setusername",
+//         payload: e.target.value
+//       })}
+//     />
+//   )
+// })
 
 
 
